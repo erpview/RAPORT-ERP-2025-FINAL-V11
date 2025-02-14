@@ -7,8 +7,30 @@ const __dirname = path.dirname(__filename);
 
 const currentTime = new Date().toISOString().split('.')[0]+'+01:00';
 
+// Partner routes
+const partners = [
+  'anegis',
+  'rho-software',
+  'axians',
+  'rambase',
+  'bpsc',
+  'deveho-consulting',
+  'it.integro',
+  'sente',
+  'soneta',
+  'symfonia',
+  'streamsoft',
+  'proalpha',
+  'vendo.erp',
+  'ipcc',
+  'sygnity-business-solutions',
+  'asseco-business-solutions',
+  'simple',
+  'digitland'
+];
+
 // Function to generate sitemap XML
-function generateSitemap(dictionaryTerms) {
+function generateSitemap(dictionaryTerms, systemDetails) {
     let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>
 <urlset 
@@ -70,6 +92,28 @@ function generateSitemap(dictionaryTerms) {
   </url>`;
     });
 
+    // Add partner pages
+    partners.forEach(partner => {
+        xml += `
+  <url>
+    <loc>https://raport-erp.pl/partnerzy/${partner}</loc>
+    <lastmod>${currentTime}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+    });
+
+    // Add system detail pages
+    systemDetails.forEach(system => {
+        xml += `
+  <url>
+    <loc>https://raport-erp.pl/systemy-erp/${system}</loc>
+    <lastmod>${currentTime}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>`;
+    });
+
     xml += '\n</urlset>';
     return xml;
 }
@@ -79,8 +123,13 @@ const dictionaryDir = path.join(__dirname, '../public/seo/slownik-erp');
 const terms = fs.readdirSync(dictionaryDir)
     .filter(file => fs.statSync(path.join(dictionaryDir, file)).isDirectory());
 
+// Get all system detail pages
+const systemsDir = path.join(__dirname, '../public/seo/systemy-erp');
+const systems = fs.readdirSync(systemsDir)
+    .filter(file => fs.statSync(path.join(systemsDir, file)).isDirectory());
+
 // Generate new sitemap
-const newSitemap = generateSitemap(terms);
+const newSitemap = generateSitemap(terms, systems);
 
 // Write the new sitemap
 fs.writeFileSync(path.join(__dirname, '../public/sitemap.xml'), newSitemap);

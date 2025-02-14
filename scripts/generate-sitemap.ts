@@ -35,25 +35,24 @@ const dictionaryTerms = [
 
 // Get partner routes
 const partners = [
-  'sente',
-  'rambase',
-  'axians',
-  'ipcc',
-  'sygrnity-business-solutions',
-  'deveho-consulting',
   'anegis',
-  'simple',
-  'bpsc',
-  'proalpha',
-  'asseco-business-solutions',
-  'streamsoft',
-  'digitland',
-  'soneta',
-  'vendo.erp',
-  'symfonia',
-  'sygnity-business-solutions',
   'rho-software',
-  'it.integro'
+  'axians',
+  'rambase',
+  'bpsc',
+  'deveho-consulting',
+  'it.integro',
+  'sente',
+  'soneta',
+  'symfonia',
+  'streamsoft',
+  'proalpha',
+  'vendo.erp',
+  'ipcc',
+  'sygnity-business-solutions',
+  'asseco-business-solutions',
+  'simple',
+  'digitland'
 ];
 
 function generateSitemapXML(): string {

@@ -373,7 +373,7 @@ const SurveyFormEditor = () => {
     }
   };
 
-  const handleDragEnd = (result: DropResult) => {
+  const handleDragEnd = async (result: DropResult) => {
     const { source, destination } = result;
     
     if (!destination) return;
@@ -381,36 +381,83 @@ const SurveyFormEditor = () => {
     const sourceDroppableId = source.droppableId;
     const destDroppableId = destination.droppableId;
 
-    // Reorder within the same module
-    if (sourceDroppableId === destDroppableId) {
-      const moduleFields = [...fields[sourceDroppableId]];
-      const [removed] = moduleFields.splice(source.index, 1);
-      moduleFields.splice(destination.index, 0, removed);
+    try {
+      // Get the field being moved
+      const sourceFields = [...fields[sourceDroppableId]];
+      const [movedField] = sourceFields.splice(source.index, 1);
+      const destFields = [...fields[destDroppableId]];
+      destFields.splice(destination.index, 0, movedField);
 
-      // Update order_index for all fields in the module
-      const updatedFields = moduleFields.map((field, index) => ({
+      // Update the moved field's module_id and order_index
+      const updatedMovedField = {
+        ...movedField,
+        module_id: destDroppableId,
+        order_index: destination.index
+      };
+
+      // Update order indices for all affected fields
+      const updatedSourceFields = sourceFields.map((field, index) => ({
         ...field,
         order_index: index
       }));
 
+      const updatedDestFields = destFields.map((field, index) => ({
+        ...field,
+        order_index: index
+      }));
+
+      // Update the fields state
       setFields({
         ...fields,
-        [sourceDroppableId]: updatedFields
+        [sourceDroppableId]: updatedSourceFields,
+        [destDroppableId]: updatedDestFields
       });
 
-      // Update order_index in database
-      updatedFields.forEach(field => {
+      // Update the moved field in the database
+      const { error: moveError } = await supabase
+        .from('survey_fields')
+        .update({
+          module_id: destDroppableId,
+          order_index: destination.index
+        })
+        .eq('id', movedField.id);
+
+      if (moveError) {
+        console.error('Error moving field:', moveError);
+        toast.error('Błąd podczas przenoszenia pola');
+        return;
+      }
+
+      // Update order indices in the database for source module
+      const sourceUpdates = updatedSourceFields.map(field =>
         supabase
           .from('survey_fields')
           .update({ order_index: field.order_index })
           .eq('id', field.id)
-          .then(({ error }) => {
-            if (error) {
-              console.error('Error updating field order:', error);
-              toast.error('Błąd podczas aktualizacji kolejności pól');
-            }
-          });
-      });
+      );
+
+      // Update order indices in the database for destination module
+      const destUpdates = updatedDestFields.map(field =>
+        supabase
+          .from('survey_fields')
+          .update({ order_index: field.order_index })
+          .eq('id', field.id)
+      );
+
+      // Execute all updates
+      const results = await Promise.all([...sourceUpdates, ...destUpdates]);
+      const errors = results.filter(result => result.error);
+
+      if (errors.length > 0) {
+        console.error('Errors updating field orders:', errors);
+        toast.error('Błąd podczas aktualizacji kolejności pól');
+        return;
+      }
+
+      toast.success('Pole zostało przeniesione');
+    } catch (error) {
+      console.error('Error in drag and drop operation:', error);
+      toast.error('Wystąpił błąd podczas przenoszenia pola');
     }
   };
 

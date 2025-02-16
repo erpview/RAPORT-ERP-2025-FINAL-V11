@@ -66,7 +66,9 @@ const ReviewPopupModal: React.FC<ReviewPopupModalProps> = ({ isOpen, onClose, re
             return (
               <div key={`${sectionTitle}-${key}-${index}`} className="bg-white border border-gray-100 rounded-lg shadow-sm hover:shadow-md transition-shadow p-4">
                 <div className="text-[15px] font-semibold text-[#2c3b67] mb-2">{key}</div>
-                {showStars ? (
+                {value === 'n/a' ? (
+                  <div className="text-sm font-medium text-[#2c3b67]">Niedotyczy</div>
+                ) : showStars ? (
                   <div className="flex items-center gap-2">
                     <div className="flex gap-1">
                       {[1, 2, 3, 4, 5].map((star) => (

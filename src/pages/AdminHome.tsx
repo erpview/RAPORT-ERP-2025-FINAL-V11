@@ -63,7 +63,7 @@ export default function AdminHome() {
     try {
       // Fetch all data
       const [slidesRes, partnersRes, faqRes, contentRes] = await Promise.all([
-        adminSupabase.from('slides').select('*').order('id'),
+        adminSupabase.from('slides').select('*').order('order_index'),
         adminSupabase.from('partners').select('*').order('order_index'),
         adminSupabase.from('faq').select('*').order('order_index'),
         adminSupabase.from('homepage_content').select('*').single()

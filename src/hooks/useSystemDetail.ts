@@ -23,7 +23,7 @@ export const useSystemDetail = (systemName: string): SystemDetailState => {
             industries:system_industries(name),
             pricing:system_pricing(*)
           `)
-          .eq('name', decodedName)
+          .ilike('name', decodedName)
           .single();
 
         if (error) throw error;

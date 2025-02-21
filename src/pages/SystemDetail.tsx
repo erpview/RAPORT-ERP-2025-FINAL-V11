@@ -74,14 +74,13 @@ const SystemDetail: React.FC = () => {
   const [ratingError, setRatingError] = useState<string | null>(null);
   const [loadingRatings, setLoadingRatings] = useState(false);
 
+  const decodedUrlParam = decodeURIComponent(systemName || '').replace(/-/g, ' ');
+
   const system = systems.find(s => {
-    const urlName = encodeURIComponent(s.name.toLowerCase().replace(/ /g, '-'));
-    return urlName === systemName;
+    const normalizedSystemName = s.name.toLowerCase();
+    const normalizedUrlParam = decodedUrlParam.toLowerCase();
+    return normalizedSystemName === normalizedUrlParam;
   });
-  
-  console.log('Found system:', system);
-  console.log('System name param:', systemName);
-  console.log('Available systems:', systems);
 
   const isSelected = system ? selectedSystems.some(s => s.id === system.id) : false;
 

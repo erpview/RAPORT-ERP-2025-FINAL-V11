@@ -13,7 +13,7 @@ begin
 end $$;
 
 -- Create a function to check if user is editor
-create or replace function auth.is_editor(checking_user_id uuid)
+create or replace function app_functions.is_editor(checking_user_id uuid)
 returns boolean as $$
 begin
   return exists (
@@ -36,21 +36,21 @@ create policy "systems_authenticated_view"
   to authenticated
   using (
     auth.uid() = created_by
-    or auth.is_admin(auth.uid())
+    or app_functions.is_admin(auth.uid())
     or status = 'published'
   );
 
 create policy "systems_admin_all"
   on systems for all
   to authenticated
-  using (auth.is_admin(auth.uid()))
-  with check (auth.is_admin(auth.uid()));
+  using (app_functions.is_admin(auth.uid()))
+  with check (app_functions.is_admin(auth.uid()));
 
 create policy "systems_editor_create"
   on systems for insert
   to authenticated
   with check (
-    auth.is_editor(auth.uid())
+    app_functions.is_editor(auth.uid())
     and auth.uid() = created_by
     and status in ('draft', 'pending')
   );
@@ -59,12 +59,12 @@ create policy "systems_editor_update"
   on systems for update
   to authenticated
   using (
-    auth.is_editor(auth.uid())
+    app_functions.is_editor(auth.uid())
     and auth.uid() = created_by
     and status in ('draft', 'rejected', 'published')
   )
   with check (
-    auth.is_editor(auth.uid())
+    app_functions.is_editor(auth.uid())
     and auth.uid() = created_by
     and status in ('draft', 'pending')
   );
@@ -73,7 +73,7 @@ create policy "systems_editor_delete"
   on systems for delete
   to authenticated
   using (
-    auth.is_editor(auth.uid())
+    app_functions.is_editor(auth.uid())
     and auth.uid() = created_by
     and status in ('draft', 'rejected')
   );

@@ -37,6 +37,6 @@ create policy "systems_version_chain_access"
     status = 'published' 
     or (status = 'pending' and (
       auth.uid() = created_by
-      or auth.is_admin(auth.uid())
+      or app_functions.is_admin(auth.uid())
     ))
   );

@@ -2,11 +2,11 @@
 create extension if not exists "pgcrypto";
 
 -- Drop existing functions to avoid conflicts
-drop function if exists auth.is_admin cascade;
-drop function if exists auth.is_editor cascade;
+drop function if exists app_functions.is_admin cascade;
+drop function if exists app_functions.is_editor cascade;
 
 -- Create admin check function
-create or replace function auth.is_admin(checking_user_id uuid)
+create or replace function app_functions.is_admin(checking_user_id uuid)
 returns boolean as $$
 declare
   user_role text;
@@ -34,7 +34,7 @@ end;
 $$ language plpgsql security definer;
 
 -- Create editor check function
-create or replace function auth.is_editor(checking_user_id uuid)
+create or replace function app_functions.is_editor(checking_user_id uuid)
 returns boolean as $$
 declare
   user_role text;

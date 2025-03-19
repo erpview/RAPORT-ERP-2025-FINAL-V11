@@ -4,9 +4,9 @@ create policy "Editors can view active users"
     to authenticated
     using (
         -- Allow if the authenticated user is an editor and the target user is active
-        (auth.is_editor(auth.uid()) and role = 'user' and is_active = true)
+        (app_functions.is_editor(auth.uid()) and role = 'user' and is_active = true)
         -- Or if it's their own record
         or (auth.uid() = user_id)
         -- Or if they're an admin (keeping existing admin access)
-        or auth.is_admin(auth.uid())
+        or app_functions.is_admin(auth.uid())
     );

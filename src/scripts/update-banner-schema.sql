@@ -14,5 +14,5 @@ CREATE POLICY "slownik_erp_banners_public_read"
 CREATE POLICY "slownik_erp_banners_admin_all"
   ON slownik_erp_banners FOR ALL
   TO authenticated
-  USING (auth.is_admin(auth.uid()))
-  WITH CHECK (auth.is_admin(auth.uid()));
+  USING (app_functions.is_admin(auth.uid()))
+  WITH CHECK (app_functions.is_admin(auth.uid()));

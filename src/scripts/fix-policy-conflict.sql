@@ -20,21 +20,21 @@ create policy "Allow authenticated view own systems"
   to authenticated
   using (
     auth.uid() = created_by
-    or auth.is_admin(auth.uid())
+    or app_functions.is_admin(auth.uid())
     or status = 'published'
   );
 
 create policy "Allow admin full access"
   on systems for all
   to authenticated
-  using (auth.is_admin(auth.uid()))
-  with check (auth.is_admin(auth.uid()));
+  using (app_functions.is_admin(auth.uid()))
+  with check (app_functions.is_admin(auth.uid()));
 
 create policy "Allow editors create systems"
   on systems for insert
   to authenticated
   with check (
-    auth.is_editor(auth.uid())
+    app_functions.is_editor(auth.uid())
     and auth.uid() = created_by
     and status in ('draft', 'pending')
   );
@@ -43,12 +43,12 @@ create policy "Allow editors update own systems"
   on systems for update
   to authenticated
   using (
-    auth.is_editor(auth.uid())
+    app_functions.is_editor(auth.uid())
     and auth.uid() = created_by
     and status in ('draft', 'rejected')
   )
   with check (
-    auth.is_editor(auth.uid())
+    app_functions.is_editor(auth.uid())
     and auth.uid() = created_by
     and status in ('draft', 'pending')
   );
@@ -57,7 +57,7 @@ create policy "Allow editors delete own draft systems"
   on systems for delete
   to authenticated
   using (
-    auth.is_editor(auth.uid())
+    app_functions.is_editor(auth.uid())
     and auth.uid() = created_by
     and status = 'draft'
   );

@@ -56,7 +56,7 @@ references profiles(id)
 on delete cascade;
 
 -- Helper function to check admin status without accessing user_management
-create or replace function auth.is_admin_by_metadata()
+create or replace function app_functions.is_admin_by_metadata()
 returns boolean as $$
 begin
   return exists (
@@ -81,7 +81,7 @@ using (
   auth.uid() = id
   or
   -- Admins can view all profiles
-  auth.is_admin_by_metadata()
+  app_functions.is_admin_by_metadata()
 );
 
 create policy "profiles_update_policy"
@@ -92,14 +92,14 @@ using (
   auth.uid() = id
   or
   -- Admins can update any profile
-  auth.is_admin_by_metadata()
+  app_functions.is_admin_by_metadata()
 )
 with check (
   -- Users can update their own profile
   auth.uid() = id
   or
   -- Admins can update any profile
-  auth.is_admin_by_metadata()
+  app_functions.is_admin_by_metadata()
 );
 
 -- Enable RLS on profiles table
@@ -114,7 +114,7 @@ with check (
   (auth.uid() = user_id and role = 'user' and not is_active)
   or
   -- Allow admins to create records
-  auth.is_admin_by_metadata()
+  app_functions.is_admin_by_metadata()
 );
 
 -- Select policy for user_management
@@ -126,7 +126,7 @@ using (
   auth.uid() = user_id
   or
   -- Admins can view all records
-  auth.is_admin_by_metadata()
+  app_functions.is_admin_by_metadata()
 );
 
 -- Update policy for user_management
@@ -137,7 +137,7 @@ using (
   -- Users can update their own record or admins can update any record
   auth.uid() = user_id
   or
-  auth.is_admin_by_metadata()
+  app_functions.is_admin_by_metadata()
 );
 
 -- Delete policy for user_management
@@ -145,7 +145,7 @@ create policy "user_management_delete_policy"
 on user_management for delete
 to authenticated
 using (
-  auth.is_admin_by_metadata()
+  app_functions.is_admin_by_metadata()
 );
 
 -- Enable RLS on user_management

@@ -7,11 +7,11 @@ create policy "Allow admin reassign system ownership"
   to authenticated
   using (
     -- Check if the user is an admin
-    auth.is_admin(auth.uid())
+    app_functions.is_admin(auth.uid())
   )
   with check (
     -- Verify admin status and that the new owner is an active editor
-    auth.is_admin(auth.uid()) and exists (
+    app_functions.is_admin(auth.uid()) and exists (
       select 1
       from user_management
       where user_id = systems.created_by

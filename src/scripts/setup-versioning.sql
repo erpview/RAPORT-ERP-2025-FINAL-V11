@@ -44,7 +44,7 @@ create policy "system_versions_editor_create"
   on system_versions for insert
   to authenticated
   with check (
-    auth.is_editor(auth.uid())
+    app_functions.is_editor(auth.uid())
     and created_by = auth.uid()
   );
 
@@ -53,14 +53,14 @@ create policy "system_versions_editor_view"
   to authenticated
   using (
     created_by = auth.uid()
-    or auth.is_admin(auth.uid())
+    or app_functions.is_admin(auth.uid())
   );
 
 create policy "system_versions_admin_all"
   on system_versions for all
   to authenticated
-  using (auth.is_admin(auth.uid()))
-  with check (auth.is_admin(auth.uid()));
+  using (app_functions.is_admin(auth.uid()))
+  with check (app_functions.is_admin(auth.uid()));
 
 -- Create function to get next version number
 create or replace function get_next_version_number(p_system_id uuid)

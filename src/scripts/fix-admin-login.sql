@@ -1,9 +1,9 @@
 -- Drop existing functions and policies
-drop function if exists auth.is_admin cascade;
-drop function if exists auth.is_editor cascade;
+drop function if exists app_functions.is_admin cascade;
+drop function if exists app_functions.is_editor cascade;
 
 -- Create a more robust admin check function
-create or replace function auth.is_admin(checking_user_id uuid)
+create or replace function app_functions.is_admin(checking_user_id uuid)
 returns boolean as $$
 declare
   user_role text;
@@ -31,7 +31,7 @@ end;
 $$ language plpgsql security definer;
 
 -- Create editor check function
-create or replace function auth.is_editor(checking_user_id uuid)
+create or replace function app_functions.is_editor(checking_user_id uuid)
 returns boolean as $$
 declare
   user_role text;
@@ -69,24 +69,24 @@ create policy "user_management_select_policy"
   to authenticated
   using (
     auth.uid() = user_id
-    or auth.is_admin(auth.uid())
+    or app_functions.is_admin(auth.uid())
   );
 
 create policy "user_management_insert_policy"
   on user_management for insert
   to authenticated
-  with check (auth.is_admin(auth.uid()));
+  with check (app_functions.is_admin(auth.uid()));
 
 create policy "user_management_update_policy"
   on user_management for update
   to authenticated
-  using (auth.is_admin(auth.uid()))
-  with check (auth.is_admin(auth.uid()));
+  using (app_functions.is_admin(auth.uid()))
+  with check (app_functions.is_admin(auth.uid()));
 
 create policy "user_management_delete_policy"
   on user_management for delete
   to authenticated
-  using (auth.is_admin(auth.uid()));
+  using (app_functions.is_admin(auth.uid()));
 
 -- Create initial admin user if not exists
 do $$

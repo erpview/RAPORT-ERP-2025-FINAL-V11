@@ -6,7 +6,7 @@ drop policy if exists "user_management_delete_policy" on user_management;
 drop function if exists auth.is_super_admin cascade;
 
 -- Create a simpler admin check function that uses app_metadata instead of querying user_management
-create or replace function auth.is_admin(checking_user_id uuid)
+create or replace function app_functions.is_admin(checking_user_id uuid)
 returns boolean as $$
 begin
   return exists (
@@ -27,24 +27,24 @@ create policy "user_management_select_policy"
   to authenticated
   using (
     auth.uid() = user_id
-    or auth.is_admin(auth.uid())
+    or app_functions.is_admin(auth.uid())
   );
 
 create policy "user_management_insert_policy"
   on user_management for insert
   to authenticated
-  with check (auth.is_admin(auth.uid()));
+  with check (app_functions.is_admin(auth.uid()));
 
 create policy "user_management_update_policy"
   on user_management for update
   to authenticated
-  using (auth.is_admin(auth.uid()))
-  with check (auth.is_admin(auth.uid()));
+  using (app_functions.is_admin(auth.uid()))
+  with check (app_functions.is_admin(auth.uid()));
 
 create policy "user_management_delete_policy"
   on user_management for delete
   to authenticated
-  using (auth.is_admin(auth.uid()));
+  using (app_functions.is_admin(auth.uid()));
 
 -- Create trigger to sync role changes with auth.users metadata
 create or replace function sync_user_role()

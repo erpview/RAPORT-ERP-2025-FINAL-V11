@@ -2,7 +2,7 @@
 create schema if not exists auth;
 
 -- Create admin user role function if it doesn't exist
-create or replace function auth.is_admin(checking_user_id uuid)
+create or replace function app_functions.is_admin(checking_user_id uuid)
 returns boolean as $$
 begin
   return exists (
@@ -16,7 +16,7 @@ end;
 $$ language plpgsql security definer;
 
 -- Create editor check function
-create or replace function auth.is_editor(checking_user_id uuid)
+create or replace function app_functions.is_editor(checking_user_id uuid)
 returns boolean as $$
 begin
   return exists (

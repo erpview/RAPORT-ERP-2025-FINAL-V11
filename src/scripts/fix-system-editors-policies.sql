@@ -22,7 +22,7 @@ create policy "system_editors_insert_policy"
             and editor_id = auth.uid()
         )
         -- Or if they're an admin
-        or auth.is_admin(auth.uid())
+        or app_functions.is_admin(auth.uid())
     );
 
 -- Allow viewing system editor records
@@ -33,7 +33,7 @@ create policy "system_editors_select_policy"
         -- Allow if user is an editor for this system
         editor_id = auth.uid()
         -- Or if they're an admin
-        or auth.is_admin(auth.uid())
+        or app_functions.is_admin(auth.uid())
     );
 
 -- Allow deleting system editor records
@@ -42,5 +42,5 @@ create policy "system_editors_delete_policy"
     to authenticated
     using (
         -- Only admins can delete editor assignments
-        auth.is_admin(auth.uid())
+        app_functions.is_admin(auth.uid())
     );

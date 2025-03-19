@@ -31,10 +31,10 @@ security definer
 as $$
 begin
   -- Check if user has permission to delete the system
-  if (select auth.is_admin(auth.uid())) then
+  if (select app_functions.is_admin(auth.uid())) then
     -- Admin can delete any system
     perform delete_system_cascade(p_system_id);
-  elsif (select auth.is_editor(auth.uid())) then
+  elsif (select app_functions.is_editor(auth.uid())) then
     -- Editor can only delete their own draft or rejected systems
     if exists (
       select 1 

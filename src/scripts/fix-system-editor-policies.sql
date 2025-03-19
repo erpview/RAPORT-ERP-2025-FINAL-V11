@@ -49,7 +49,7 @@ create policy "Editors can view systems"
             and editor_id = auth.uid()
         )
         -- Or if they are an admin
-        or auth.is_admin(auth.uid())
+        or app_functions.is_admin(auth.uid())
     );
 
 -- Ensure RLS is enabled

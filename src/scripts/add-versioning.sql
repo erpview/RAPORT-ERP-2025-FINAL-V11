@@ -47,7 +47,7 @@ create policy "Allow editors create versions"
   on system_versions for insert
   to authenticated
   with check (
-    auth.is_editor(auth.uid())
+    app_functions.is_editor(auth.uid())
     and created_by = auth.uid()
   );
 
@@ -56,14 +56,14 @@ create policy "Allow editors view own versions"
   to authenticated
   using (
     created_by = auth.uid()
-    or auth.is_admin(auth.uid())
+    or app_functions.is_admin(auth.uid())
   );
 
 create policy "Allow admins manage versions"
   on system_versions for all
   to authenticated
-  using (auth.is_admin(auth.uid()))
-  with check (auth.is_admin(auth.uid()));
+  using (app_functions.is_admin(auth.uid()))
+  with check (app_functions.is_admin(auth.uid()));
 
 -- Create trigger to archive current version before update
 create or replace function archive_system_version()

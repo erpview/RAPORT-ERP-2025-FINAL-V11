@@ -18,7 +18,7 @@ create policy "Editors can manage field values"
             and editor_id = auth.uid()
         )
         -- Or if they're an admin
-        or auth.is_admin(auth.uid())
+        or app_functions.is_admin(auth.uid())
     )
     with check (
         -- Allow if user is an editor for this system
@@ -28,7 +28,7 @@ create policy "Editors can manage field values"
             and editor_id = auth.uid()
         )
         -- Or if they're an admin
-        or auth.is_admin(auth.uid())
+        or app_functions.is_admin(auth.uid())
     );
 
 -- Grant appropriate permissions

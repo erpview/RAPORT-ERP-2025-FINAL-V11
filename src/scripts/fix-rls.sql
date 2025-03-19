@@ -24,13 +24,13 @@ create policy "Allow public read access to systems"
 create policy "Allow admin full access to systems"
   on systems for all
   to authenticated
-  using (auth.is_admin(auth.uid()));
+  using (app_functions.is_admin(auth.uid()));
 
 create policy "Allow editors to manage own systems"
   on systems for all
   to authenticated
   using (
-    auth.is_editor(auth.uid()) 
+    app_functions.is_editor(auth.uid()) 
     and created_by = auth.uid()
   );
 

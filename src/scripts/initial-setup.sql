@@ -118,7 +118,7 @@ alter table systems enable row level security;
 alter table user_roles enable row level security;
 
 -- Create admin check function
-create or replace function auth.is_admin(checking_user_id uuid)
+create or replace function app_functions.is_admin(checking_user_id uuid)
 returns boolean as $$
 begin
   return exists (
@@ -132,7 +132,7 @@ end;
 $$ language plpgsql security definer;
 
 -- Create editor check function
-create or replace function auth.is_editor(checking_user_id uuid)
+create or replace function app_functions.is_editor(checking_user_id uuid)
 returns boolean as $$
 begin
   return exists (
@@ -154,13 +154,13 @@ create policy "Allow public read access to systems"
 create policy "Allow admin full access to systems"
   on systems for all
   to authenticated
-  using (auth.is_admin(auth.uid()));
+  using (app_functions.is_admin(auth.uid()));
 
 create policy "Allow editors to manage own systems"
   on systems for all
   to authenticated
   using (
-    auth.is_editor(auth.uid()) 
+    app_functions.is_editor(auth.uid()) 
     and created_by = auth.uid()
   );
 
@@ -172,4 +172,4 @@ create policy "Allow users to read own role"
 create policy "Allow admins to manage roles"
   on user_roles for all
   to authenticated
-  using (auth.is_admin(auth.uid()));
+  using (app_functions.is_admin(auth.uid()));

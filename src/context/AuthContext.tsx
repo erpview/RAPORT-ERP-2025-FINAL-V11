@@ -94,7 +94,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setIsAdmin(isUserAdmin);
       setIsEditor(isUserEditor);
       setCanViewUsers(userData.can_view_users || isUserAdmin);
-      setCanViewSystems(userData.can_view_systems || isUserAdmin || isUserEditor);
+      setCanViewSystems((isUserEditor && userData.can_view_systems) || isUserAdmin);
       setCanViewCompanies(userData.can_view_companies || isUserAdmin);
 
       // Check if we need to show the survey for regular users

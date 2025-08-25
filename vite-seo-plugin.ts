@@ -78,7 +78,7 @@ const PARTNER_SLUGS = [
   'asseco-business-solutions',
   'axians',
   'bpsc',
-  'deveho-consulting',
+  'todis-consulting',
   'digitland',
   'soneta',
   'ipcc',

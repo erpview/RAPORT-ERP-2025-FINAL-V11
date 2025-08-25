@@ -111,7 +111,7 @@ export default defineConfig(async (): Promise<UserConfig> => {
           asseco: resolve(__dirname, 'partnerzy/asseco-business-solutions/index.html'),
           axians: resolve(__dirname, 'partnerzy/axians/index.html'),
           bpsc: resolve(__dirname, 'partnerzy/bpsc/index.html'),
-          deveho: resolve(__dirname, 'partnerzy/deveho-consulting/index.html'),
+          todis: resolve(__dirname, 'partnerzy/todis-consulting/index.html'),
           digitland: resolve(__dirname, 'partnerzy/digitland/index.html'),
           ipcc: resolve(__dirname, 'partnerzy/ipcc/index.html'),
           itintegro: resolve(__dirname, 'partnerzy/it.integro/index.html'),

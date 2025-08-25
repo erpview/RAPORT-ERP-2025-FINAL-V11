@@ -14,7 +14,7 @@ const partners = [
   'axians',
   'rambase',
   'bpsc',
-  'deveho-consulting',
+  'todis-consulting',
   'it.integro',
   'sente',
   'soneta',

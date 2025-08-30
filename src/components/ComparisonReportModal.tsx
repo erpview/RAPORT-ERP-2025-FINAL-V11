@@ -50,9 +50,9 @@ export const ComparisonReportModal: React.FC<ComparisonReportModalProps> = ({ is
             if (reportsError) throw reportsError;
 
             const { data: userData, error: userError } = await supabase
-                .from('user_emails_view')
-                .select('id, email')
-                .in('id', reportsData?.map(r => r.user_id) || []);
+                .rpc('get_user_emails_for_reports', {
+                    report_user_ids: reportsData?.map(r => r.user_id) || []
+                });
 
             if (userError) {
                 console.error('Error fetching user emails:', userError);
